@@ -6,11 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
+use Laravel\Sanctum\HasApiTokens;
+
+
+
+
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, Notifiable;
 
-    protected $primaryKey = 'userId';
+    protected $primaryKey = 'id'; // ستون اصلی
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'firstName',
@@ -27,6 +35,10 @@ class User extends Authenticatable
 
     protected $hidden = ['userPassword'];
 
+    public function getAuthPassword()
+    {
+        return $this->userPassword;
+    }
     // روابط
     public function company()
     {

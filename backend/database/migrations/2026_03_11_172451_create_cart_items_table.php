@@ -13,7 +13,7 @@ return new class extends Migration
     {
 
         Schema::create('cart_items', function (Blueprint $table) {
-            $table->id('cartItemId');
+            $table->id();
             $table->foreignId('cartId')->constrained('carts')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('postId')->constrained('posts')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('colorId')->nullable()->constrained('colors')->cascadeOnDelete()->cascadeOnUpdate();

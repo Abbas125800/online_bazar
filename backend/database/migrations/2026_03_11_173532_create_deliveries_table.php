@@ -15,13 +15,13 @@ return new class extends Migration
             $table->id(); // deliveryId
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('address');
-            $table->foreignId('district_id')->nullable()->constrained('districts')->nullOnDelete()->cascadeOnUpdate();
+            $table->foreignId('distrect_id')->nullable()->constrained('distrects')->nullOnDelete()->cascadeOnUpdate();
             $table->enum('status', ['waiting', 'on_the_way', 'delivered', 'failed'])->default('waiting');
             $table->timestamp('delivery_date')->nullable();
             $table->timestamps();
         });
 
-       
+
     }
 
     /**
