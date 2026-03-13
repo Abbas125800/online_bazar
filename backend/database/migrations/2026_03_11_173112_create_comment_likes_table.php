@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('comment_likes', function (Blueprint $table) {
-            $table->id('comment_like_id');
+            $table->id();
             $table->foreignId('comment_id')->constrained('comments')->cascadeOnDelete()->cascadeOnUpdate();
             $table->boolean('is_like')->default(false);
             $table->timestamps();

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('carts', function (Blueprint $table) {
-            $table->id('cartId');
+            $table->id();
             $table->foreignId('customerId')->constrained('customers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->enum('status', ['active', 'pending', 'completed'])->default('pending');
             $table->timestamps();

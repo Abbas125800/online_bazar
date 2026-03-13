@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('likes', function (Blueprint $table) {
-            $table->id('likeId');
+            $table->id();
             $table->foreignId('postId')->constrained('posts')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('customerId')->constrained('customers')->cascadeOnDelete()->cascadeOnUpdate();
             $table->unique(['postId', 'customerId']);

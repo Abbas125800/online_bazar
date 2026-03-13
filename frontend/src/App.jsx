@@ -1,23 +1,30 @@
-import { useEffect, useState } from "react";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRoute from "./ProtectedRoute";
+// import "bootstrap/dist/css/bootstrap.min.css";
+
 
 function App() {
-  const [product, setProduct] = useState(null);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/products")
-      .then(res => res.json())
-      .then(data => setProduct(data));
-  }, []);
 
   return (
-    <div>
-      {product && (
-        <div>
-          <h1>{product.name}</h1>
-          <p>{product.price}</p>
-        </div>
-      )}
-    </div>
+    <BrowserRouter>
+      <Routes>
+
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
