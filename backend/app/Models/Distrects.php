@@ -12,7 +12,7 @@ class Distrects extends Model
     protected $primaryKey = 'distrectId';
 
     protected $fillable = [
-        'name',
+        'districtName',
         'provinceId'
     ];
 
