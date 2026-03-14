@@ -12,20 +12,20 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $province = Provinces::create([
-            'provinceName' => 'کندز'
-        ]);
+        // $province = Provinces::create([
+        //     'provinceName' => 'کندز'
+        // ]);
 
-        $district = Distrects::create([
-            'districtName' => 'کندز',
-            'provinceId' => 1
-        ]);
+        // $district = Distrects::create([
+        //     'districtName' => 'کندز',
+        //     'provinceId' => 1
+        // ]);
 
         User::create([
-            'firstName' => 'Admin',
-            'lastName' => 'User',
-            'phone' => '0700000000',
-            'email' => 'admin@test.com',
+            'firstName' => 'Admin1',
+            'lastName' => 'User1',
+            'phone' => '0800000000',
+            'email' => 'adminn@test.com',
             'userImage' => null,
             'backgroundImage' => null,
             'userPassword' => Hash::make('11111111'),
