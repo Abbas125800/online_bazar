@@ -27,8 +27,7 @@ function Register() {
     setErrors({});
 
     try {
-      const res = await axios.post("/register", form);
-      localStorage.setItem("token", res.data.token);
+      await axios.post("/register", form);
       navigate("/dashboard");
     } catch (err) {
       if (err.response?.data?.errors) {

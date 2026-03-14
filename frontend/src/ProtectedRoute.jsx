@@ -1,13 +1,5 @@
-import { Navigate } from "react-router-dom";
-
 function ProtectedRoute({ children }) {
-
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    return <Navigate to="/login" />;
-  }
-
+  // Token-less mode: always allow access
   return children;
 }
 

@@ -16,8 +16,6 @@ function Login() {
         userPassword: password,
       });
 
-      localStorage.setItem("token", res.data.token);
-
       navigate("/dashboard");
 
     } catch (err) {

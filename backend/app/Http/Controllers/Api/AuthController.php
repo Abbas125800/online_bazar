@@ -18,18 +18,14 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
             'user' => $user,
-            'token' => $token
+            'message' => 'login success'
         ]);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
-
         return response()->json([
             'message' => 'logout success'
         ]);
@@ -56,11 +52,10 @@ class AuthController extends Controller
         $data['role'] = $data['role'] ?? 'vendor';
 
         $user = User::create($data);
-        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'user'  => $user,
-            'token' => $token
+            'message' => 'register success'
         ], 201);
     }
 }
