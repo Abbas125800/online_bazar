@@ -5,7 +5,10 @@ const translations = {
   fa: {
     dir: "rtl",
     langName: "دری",
-    strings: {
+        strings: {
+            dark: "تاریک",
+            light: "روشن",
+            mid: "متوسط",
       eyebrow: "پنل مدیریت آنلاین بازار",
       subtitle: "مرور سریع شاخص‌ها و وضعیت سیستم بر اساس دیتابیس.",
       hello: "سلام",
@@ -62,7 +65,10 @@ const translations = {
   en: {
     dir: "ltr",
     langName: "English",
-    strings: {
+      strings: {
+            dark: "Dark",
+            light: "Light",
+            mid: "Mid",
       eyebrow: "Online Bazar Admin Panel",
       subtitle: "Quick view of KPIs and system status from the database.",
       hello: "Hello",
@@ -116,10 +122,14 @@ const translations = {
       lastDays: "days",
     },
   },
-  ps: {
+    ps: {
+      
     dir: "rtl",
     langName: "پښتو",
-    strings: {
+        strings: {
+            dark: "تیار",
+            light: "روشانه",
+            mid: "منحنی",
       eyebrow: "د آنلاین بازار د اډمین پینل",
       subtitle: "د ډیټابیس پر بنسټ د شاخصونو چټک لید.",
       hello: "سلام",
@@ -192,6 +202,7 @@ const inventoryTranslations = {
 function AdminDashboard() {
   const [locale, setLocale] = useState(localStorage.getItem("locale") || "fa");
   const t = (key) => translations[locale]?.strings[key] ?? translations.en.strings[key] ?? key;
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [stats, setStats] = useState({
     users: 0,
     vendors: 0,
@@ -223,6 +234,13 @@ function AdminDashboard() {
     document.documentElement.lang = locale;
     localStorage.setItem("locale", locale);
   }, [locale]);
+
+  useEffect(() => {
+    const body = document.body;
+    body.classList.remove("theme-light", "theme-dark", "theme-mid");
+    body.classList.add(`theme-${theme}`);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   useEffect(() => {
     const load = async () => {
@@ -327,6 +345,16 @@ function AdminDashboard() {
                 {conf.langName}
               </option>
             ))}
+          </select>
+          <select
+            value={theme}
+            onChange={(e) => setTheme(e.target.value)}
+            className="outline-btn"
+            style={{ minWidth: "140px" }}
+          >
+            <option value="light">{t("light")}</option>
+            <option value="mid">{t("mid")}</option>
+            <option value="dark">{t("dark")}</option>
           </select>
           <button className="ghost-btn">{t("settings")}</button>
           <button className="outline-btn">{t("report")}</button>
