@@ -287,7 +287,7 @@ function AdminDashboard() {
   const handleLogout = async () => {
     try {
       await axios.post("/logout");
-    } catch (e) {
+    } catch (err) {
       console.warn("logout failed, clearing token anyway");
     }
     localStorage.removeItem("token");

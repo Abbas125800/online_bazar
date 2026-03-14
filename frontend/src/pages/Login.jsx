@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "../services/axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -58,7 +58,9 @@ function Login() {
           </button>
         </form>
 
-        <p style={styles.footer}>Online Bazar System</p>
+        <p style={styles.footer}>
+          Online Bazar System • <Link to="/register">Create Account</Link>
+        </p>
       </div>
     </div>
   );
