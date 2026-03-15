@@ -18,38 +18,8 @@ function Register() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const loadProvinces = async () => {
-      try {
-        const res = await axios.get("/provinces");
-        setProvinces(res.data);
-        if (res.data.length) {
-          setForm((prev) => ({ ...prev, provinceId: res.data[0].id }));
-        }
-      } catch (e) {
-        console.warn("cannot load provinces", e);
-      }
-    };
-    loadProvinces();
-  }, []);
-
-  useEffect(() => {
-    const loadDistricts = async () => {
-      if (!form.provinceId) return;
-      try {
-        const res = await axios.get("/districts", { params: { province_id: form.provinceId } });
-        setDistricts(res.data);
-        if (res.data.length) {
-          setForm((prev) => ({ ...prev, distrectId: res.data[0].id }));
-        }
-      } catch (e) {
-        console.warn("cannot load districts", e);
-      }
-    };
-    loadDistricts();
-  }, [form.provinceId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -116,13 +86,14 @@ function Register() {
             </select>
           </div>
 
-          {Object.keys(errors).length > 0 && (
+         {Object.keys(errors).length > 0 && (
             <div style={styles.errorBox}>
               {Object.entries(errors).map(([field, msgs]) => (
                 <div key={field}>{msgs.join(" , ")}</div>
               ))}
             </div>
           )}
+          {loadError && <div style={styles.errorBox}>{loadError}</div>}
 
           <button type="submit" style={styles.button} disabled={loading}>
             {loading ? "Creating..." : "Register"}
