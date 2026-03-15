@@ -16,8 +16,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // ProvinceSeeder::class,
+            ProvinceSeeder::class,
             DistrictSeeder::class,
         ]);
     }
 }
+
+
