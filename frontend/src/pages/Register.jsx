@@ -18,6 +18,7 @@ function Register() {
   const [provinces, setProvinces] = useState([]);
   const [districts, setDistricts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,8 +29,9 @@ function Register() {
         if (res.data.length) {
           setForm((prev) => ({ ...prev, provinceId: res.data[0].id }));
         }
+        setLoadError("");
       } catch (e) {
-        console.warn("cannot load provinces", e);
+        setLoadError("Provinces could not be loaded. Check API URL or CORS.");
       }
     };
     loadProvinces();
@@ -44,8 +46,9 @@ function Register() {
         if (res.data.length) {
           setForm((prev) => ({ ...prev, distrectId: res.data[0].id }));
         }
+        setLoadError("");
       } catch (e) {
-        console.warn("cannot load districts", e);
+        setLoadError("Districts could not be loaded. Check API URL or CORS.");
       }
     };
     loadDistricts();
@@ -116,13 +119,14 @@ function Register() {
             </select>
           </div>
 
-          {Object.keys(errors).length > 0 && (
+         {Object.keys(errors).length > 0 && (
             <div style={styles.errorBox}>
               {Object.entries(errors).map(([field, msgs]) => (
                 <div key={field}>{msgs.join(" , ")}</div>
               ))}
             </div>
           )}
+          {loadError && <div style={styles.errorBox}>{loadError}</div>}
 
           <button type="submit" style={styles.button} disabled={loading}>
             {loading ? "Creating..." : "Register"}
