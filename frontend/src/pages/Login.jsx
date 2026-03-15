@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "../services/axios";
 import { useNavigate, Link } from "react-router-dom";
+import "./Register.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -24,7 +25,7 @@ function Login() {
   };
 
   return (
-    <div style={styles.container}>
+    <div className="auth-page">
       <div style={styles.card}>
         <h2 style={styles.title}>Admin Login</h2>
 

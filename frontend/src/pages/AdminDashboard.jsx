@@ -203,6 +203,7 @@ function AdminDashboard() {
   const [locale, setLocale] = useState(localStorage.getItem("locale") || "fa");
   const t = (key) => translations[locale]?.strings[key] ?? translations.en.strings[key] ?? key;
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [stats, setStats] = useState({
     users: 0,
     vendors: 0,
@@ -228,6 +229,7 @@ function AdminDashboard() {
   const [support, setSupport] = useState({ messages_last7: 0, avg_rating: 0 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [now, setNow] = useState(new Date());
 
   useEffect(() => {
     document.documentElement.dir = translations[locale].dir;
@@ -241,6 +243,11 @@ function AdminDashboard() {
     body.classList.add(`theme-${theme}`);
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const load = async () => {
@@ -323,7 +330,16 @@ function AdminDashboard() {
   }
 
   return (
-    <div className={`dashboard ${dirClass}`}>
+    <div className={`layout ${dirClass}`}>
+      <Sidebar
+        locale={locale}
+        t={t}
+        stats={stats}
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
+
+      <main className="dashboard">
       <header className="dashboard__header">
         <div>
           <p className="dashboard__eyebrow">{t("eyebrow")}</p>
@@ -334,6 +350,7 @@ function AdminDashboard() {
           {error && <p className="muted" style={{ color: "#f97316" }}>{error}</p>}
         </div>
         <div className="dashboard__header-actions">
+          <button className="ghost-btn burger" onClick={() => setSidebarOpen((v) => !v)}>☰</button>
           <select
             value={locale}
             onChange={(e) => setLocale(e.target.value)}
@@ -361,6 +378,16 @@ function AdminDashboard() {
           <button className="danger-btn" onClick={handleLogout}>{t("logout")}</button>
         </div>
       </header>
+
+      <div className="floating-clock">
+        <div className="floating-clock__time">
+          {now.toLocaleTimeString(locale, { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}
+        </div>
+        <div className="floating-clock__date">
+          {formatDate(now, locale).short}
+        </div>
+        <div className="floating-clock__pulse" />
+      </div>
 
       <section className="kpi-grid">
         <KpiCard title={t("kpiUsers")} value={stats.users} change={t("liveFromDb")} accent="#6366f1" />
@@ -507,6 +534,7 @@ function AdminDashboard() {
           </div>
         </Card>
       </section>
+      </main>
     </div>
   );
 }
@@ -600,5 +628,74 @@ const paymentLabel = (method, locale) => {
 };
 
 const avg = (arr) => (arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0);
+const formatDate = (date, locale) => {
+  const persianOptions = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+  const persianShort = { weekday: "short", month: "long", day: "numeric" };
+
+  if (locale === "fa") {
+    return {
+      long: new Intl.DateTimeFormat("fa-AF-u-ca-persian", persianOptions).format(date),
+      short: new Intl.DateTimeFormat("fa-AF-u-ca-persian", persianShort).format(date),
+    };
+  }
+  if (locale === "ps") {
+    return {
+      long: new Intl.DateTimeFormat("ps-AF-u-ca-persian", persianOptions).format(date),
+      short: new Intl.DateTimeFormat("ps-AF-u-ca-persian", persianShort).format(date),
+    };
+  }
+  return {
+    long: new Intl.DateTimeFormat("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }).format(date),
+    short: new Intl.DateTimeFormat("en-US", { weekday: "short", month: "short", day: "numeric" }).format(date),
+  };
+};
+
+const Sidebar = ({ locale, t, stats, open, onClose }) => {
+  const navItems = [
+    { icon: "🏠", label: t("eyebrow") },
+    { icon: "👥", label: t("kpiUsers"), count: stats.users },
+    { icon: "🛍️", label: t("kpiVendors"), count: stats.vendors },
+    { icon: "🙍‍♂️", label: t("kpiCustomers"), count: stats.customers },
+    { icon: "📦", label: t("kpiPosts"), count: stats.posts },
+    { icon: "📊", label: t("ordersTrendTitle"), count: stats.orders },
+    { icon: "💳", label: t("financialTitle") },
+    { icon: "🚚", label: "Deliveries" },
+    { icon: "💬", label: t("supportTitle") },
+    { icon: "⭐", label: "Ratings" },
+    { icon: "📝", label: "Categories / Brands" },
+    { icon: "🧾", label: "Reports / Analytics" },
+    { icon: "⚙️", label: t("settings") },
+  ];
+
+  return (
+    <aside className={`sidebar ${open ? "sidebar--open" : ""}`}>
+      <div className="sidebar__brand">
+        <span>Online Bazar</span>
+        <button className="ghost-btn ghost-btn--small sidebar__close" onClick={onClose}>×</button>
+      </div>
+      <nav className="sidebar__nav">
+        {navItems.map((item) => (
+          <div key={item.label} className="sidebar__item">
+            <div className="sidebar__label">
+              <span className="sidebar__icon">{item.icon}</span>
+              <span className="sidebar__text">{item.label}</span>
+            </div>
+            {item.count !== undefined && <span className="sidebar__pill">{formatNum(item.count)}</span>}
+          </div>
+        ))}
+      </nav>
+      <div className="sidebar__footer">
+        <div className="sidebar__badge">{locale.toUpperCase()}</div>
+        <span className="muted">{t("report")}</span>
+      </div>
+    </aside>
+  );
+};
+
+const formatNum = (n) => {
+  if (n === undefined || n === null) return "";
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return n;
+};
 
 export default AdminDashboard;
